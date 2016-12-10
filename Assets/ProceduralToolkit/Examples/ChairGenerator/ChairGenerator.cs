@@ -34,6 +34,47 @@ namespace ProceduralToolkit.Examples
             Armrests.Armrests1
         };
 
+        public static GameObject ChairCollider(float legWidth,
+            float legHeight,
+            float seatWidth,
+            float seatDepth,
+            float seatHeight,
+            float backHeight,
+            bool hasStretchers,
+            bool hasArmrests)
+        {
+            //seat
+            GameObject seat = new GameObject("seat");
+            BoxCollider sC = seat.AddComponent<BoxCollider>();
+            sC.size = new Vector3(seatWidth, seatHeight, seatDepth);
+            sC.center = Vector3.up * legHeight + Vector3.up * seatHeight * .5f;
+
+            //legs
+            Vector3 legPos = new Vector3(seatWidth * .5f - legWidth * .5f, legHeight * .5f, seatDepth * .5f - legWidth * .5f);
+
+            GameObject leg1 = new GameObject("leg");
+            leg1.transform.parent = seat.transform;
+            BoxCollider l1C = leg1.AddComponent<BoxCollider>();
+            l1C.size = new Vector3(legWidth, legHeight, legWidth);
+            l1C.center = legPos;
+
+            GameObject leg2 = GameObject.Instantiate(leg1, seat.transform, false);
+            leg2.GetComponent<BoxCollider>().center = Vector3.Scale(legPos, new Vector3(-1, 1, 1));
+            GameObject leg3 = GameObject.Instantiate(leg1, seat.transform, false);
+            leg3.GetComponent<BoxCollider>().center = Vector3.Scale(legPos, new Vector3(1, 1, -1));
+            GameObject leg4 = GameObject.Instantiate(leg1, seat.transform, false);
+            leg4.GetComponent<BoxCollider>().center = Vector3.Scale(legPos, new Vector3(-1, 1, -1));
+
+            //back
+            GameObject back = new GameObject("back");
+            back.transform.parent = seat.transform;
+            BoxCollider bC = back.AddComponent<BoxCollider>();
+            bC.size = new Vector3(seatWidth, backHeight, legWidth);
+            bC.center = new Vector3(0, legHeight + seatHeight + backHeight * .5f, seatDepth * .5f - legWidth * .5f);
+
+            return seat;
+        }
+
         public static MeshDraft Chair(
             float legWidth,
             float legHeight,

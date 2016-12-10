@@ -52,58 +52,6 @@ namespace ProceduralToolkit.Examples.UI
 
             Generate();
             currentPalette.AddRange(targetPalette);
-
-            InstantiateControl<SliderControl>(leftPanel)
-                .Initialize("Leg width", minLegWidth, maxLegWidth, legWidth, value =>
-                {
-                    legWidth = value;
-                    Generate();
-                });
-            InstantiateControl<SliderControl>(leftPanel)
-                .Initialize("Leg height", minLegHeight, maxLegHeight, legHeight, value =>
-                {
-                    legHeight = value;
-                    Generate();
-                });
-
-            InstantiateControl<SliderControl>(leftPanel)
-                .Initialize("Seat width", minSeatWidth, maxSeatWidth, seatWidth, value =>
-                {
-                    seatWidth = value;
-                    Generate();
-                });
-            InstantiateControl<SliderControl>(leftPanel)
-                .Initialize("Seat depth", minSeatDepth, maxSeatDepth, seatDepth, value =>
-                {
-                    seatDepth = value;
-                    Generate();
-                });
-            InstantiateControl<SliderControl>(leftPanel)
-                .Initialize("Seat height", minSeatHeight, maxSeatHeight, seatHeight, value =>
-                {
-                    seatHeight = value;
-                    Generate();
-                });
-
-            InstantiateControl<SliderControl>(leftPanel)
-                .Initialize("Back height", minBackHeight, maxBackHeight, backHeight, value =>
-                {
-                    backHeight = value;
-                    Generate();
-                });
-
-            InstantiateControl<ToggleControl>(leftPanel).Initialize("Has stretchers", hasStretchers, value =>
-            {
-                hasStretchers = value;
-                Generate();
-            });
-            InstantiateControl<ToggleControl>(leftPanel).Initialize("Has armrests", hasArmrests, value =>
-            {
-                hasArmrests = value;
-                Generate();
-            });
-
-            InstantiateControl<ButtonControl>(leftPanel).Initialize("Generate", Generate);
         }
 
         private void Update()
@@ -121,44 +69,8 @@ namespace ProceduralToolkit.Examples.UI
             var chairMesh = chairDraft.ToMesh();
             chairMesh.RecalculateBounds();
             chairMeshFilter.mesh = chairMesh;
-
-            float chairRadius = Mathf.Sqrt(seatWidth/2f*seatWidth/2f + seatDepth/2f*seatDepth/2f);
-            float platformRadius = chairRadius + platformRadiusOffset;
-
-            var platformMesh = Platform(platformRadius, platformBaseOffset, platformSegments, platformHeight).ToMesh();
-            platformMesh.RecalculateBounds();
-            platformMeshFilter.mesh = platformMesh;
-        }
-
-        private static MeshDraft Platform(float radius, float baseOffset, int segments, float heignt)
-        {
-            float segmentAngle = 360f/segments;
-            float currentAngle = 0;
-
-            var lowerRing = new List<Vector3>(segments);
-            var upperRing = new List<Vector3>(segments);
-            for (var i = 0; i < segments; i++)
-            {
-                var lowerPoint = PTUtils.PointOnCircle3XZ(radius + baseOffset, currentAngle);
-                lowerRing.Add(lowerPoint + Vector3.down*heignt);
-
-                var upperPoint = PTUtils.PointOnCircle3XZ(radius, currentAngle);
-                upperRing.Add(upperPoint);
-                currentAngle -= segmentAngle;
-            }
-
-            var platform = new MeshDraft {name = "Platform"};
-            var bottom = MeshDraft.TriangleFan(lowerRing);
-            bottom.Add(MeshDraft.Band(lowerRing, upperRing));
-            bottom.Paint(new Color(0.5f, 0.5f, 0.5f, 1));
-            platform.Add(bottom);
-
-            upperRing.Reverse();
-            var top = MeshDraft.TriangleFan(upperRing);
-            top.Paint(new Color(0.8f, 0.8f, 0.8f, 1));
-            platform.Add(top);
-
-            return platform;
+            ChairGenerator.ChairCollider(legWidth, legHeight, seatWidth, seatDepth, seatHeight, backHeight,
+                hasStretchers, hasArmrests).transform.SetParent(chairMeshFilter.transform, false);
         }
     }
 }
