@@ -23,7 +23,7 @@ public static class BedGenerator {
             GameObject head = new GameObject("headboard");
             BoxCollider hC = head.AddComponent<BoxCollider>();
             hC.size = new Vector3(width, headboardHeight, legWidth);
-            hC.center = new Vector3(0, legHeight + headboardHeight * .5f, depth * .5f + legWidth * .5f);
+            hC.center = new Vector3(0, legHeight + platformHeight + headboardHeight * .5f, depth * .5f - legWidth * .5f);
             head.transform.parent = bed.transform;
         }
 
@@ -33,7 +33,7 @@ public static class BedGenerator {
             GameObject foot = new GameObject("footboard");
             BoxCollider fC = foot.AddComponent<BoxCollider>();
             fC.size = new Vector3(width, footboardHeight, legWidth);
-            fC.center = new Vector3(0, legHeight + footboardHeight * .5f, -depth * .5f - legWidth * .5f);
+            fC.center = new Vector3(0, legHeight + platformHeight + footboardHeight * .5f, -depth * .5f + legWidth * .5f);
             foot.transform.parent = bed.transform;
         }
 

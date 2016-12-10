@@ -43,7 +43,7 @@ public class ChairThrower : MonoBehaviour {
         if (Input.GetButtonDown("Fire3"))
         {
             GameObject bed = Instantiate(chairPrefab);
-            bed.GetComponent<MeshFilter>().mesh = BedGenerator.Bed(.1f, .3f, 1, 2, .2f, .3f, 
+            bed.GetComponent<MeshFilter>().mesh = BedGenerator.Bed(.1f, .3f, 1, 2, .2f, .2f, 
                 .07f, .2f, .4f, .65f, .3f, 
                 Color.HSVToRGB(Random.value, Random.Range(.5f, 1f), 1), 
                 Color.HSVToRGB(Random.value, Random.Range(.5f, 1f), 1)).ToMesh();
