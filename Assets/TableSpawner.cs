@@ -27,7 +27,27 @@ public class TableSpawner : MonoBehaviour {
             c.material = physMaterial;
         }
 
+        //table arrangement: table require a nearby chair
+        FurnitureCastArrangement cast = table.AddComponent<FurnitureCastArrangement>();
+        cast.boxDimensions = new Vector3(tableWidth - legWidth, legHeight + tableHeight, tableDepth - legWidth);
+        cast.boxOffset = Vector3.up * (legHeight + tableHeight) / 2;
+        cast.pushAmount = .2f;
+        cast.furnitureType = Furniture.FurnitureType.chair;
+
         table.transform.position = transform.position;
         table.transform.rotation = transform.rotation;
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.gray;
+        Gizmos.DrawSphere(transform.position, Mathf.Min(tableWidth,tableDepth) / 2);
+        Vector3 upV = transform.up * legHeight;
+        Vector3 fV = transform.forward * tableDepth / 2;
+        Vector3 rV = transform.right * tableWidth / 2;
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(transform.position + upV + fV + rV, transform.position + upV + fV - rV);
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(transform.position + upV - fV + rV, transform.position + upV - fV - rV);
     }
 }

@@ -13,7 +13,7 @@ public class Furniture : MonoBehaviour {
 
     List<Arrangement> arrangements;
 
-    bool pass;
+    bool pass = true;
 
     LineRenderer failureLine;
     public List<Vector3> failurePos;
@@ -27,25 +27,31 @@ public class Furniture : MonoBehaviour {
             arrangements.Add(a);
             a.furnitureParent = this;
         }
-	}
+        failureLine.enabled = false;
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        pass = true;
-		foreach(Arrangement a in arrangements)
+        if (Random.value < .05f) //don't need to check every frame, just do it frequently enough.
         {
-            if (a.evaluate() == false)
-                pass = false;
-        }
+            pass = true;
+            foreach (Arrangement a in arrangements)
+            {
+                if (a.evaluate() == false)
+                    pass = false;
+            }
 
-        if(!pass)
-        {
-            failureLine.enabled = true;
-            failureLine.numPositions = failurePos.Count;
-            failureLine.SetPositions(failurePos.ToArray());
-        } else
-        {
-            failureLine.enabled = false;
+            if (!pass)
+            {
+                failureLine.enabled = true;
+                failureLine.numPositions = failurePos.Count;
+                failureLine.SetPositions(failurePos.ToArray());
+            }
+            else
+            {
+                failureLine.enabled = false;
+            }
         }
 	}
 

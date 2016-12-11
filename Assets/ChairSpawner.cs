@@ -35,10 +35,17 @@ public class ChairSpawner : MonoBehaviour {
         SlideArrangement slide = chair.AddComponent<SlideArrangement>();
         slide.boxDimensions = new Vector3(sWidth, lHeight + sHeight + bHeight, sDepth);
         slide.boxOffset = Vector3.up * (lHeight + sHeight + bHeight) / 2;
-        slide.pushForward = sDepth;
-        slide.pushBackwards = sDepth;
+        slide.pushAmount = sDepth;
 
         chair.transform.position = transform.position;
         chair.transform.rotation = transform.rotation;
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.gray;
+        Gizmos.DrawSphere(transform.position, sWidth/2);
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawLine(transform.position + Vector3.up * sWidth/2, transform.position + Vector3.up * sWidth/2 + transform.forward * sWidth/2);
     }
 }

@@ -27,7 +27,7 @@ public class Player : MonoBehaviour {
         } else
         {
             mLook.enabled = false;
-            transform.position = inhabitedObject.transform.position + Vector3.up * 5f;
+            transform.position = inhabitedObject.transform.position + Vector3.up * 3f;
             transform.rotation = inhabitedObject.transform.rotation * Quaternion.Euler(90, 0, 0);
 
             //move

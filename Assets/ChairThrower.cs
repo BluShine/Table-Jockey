@@ -56,8 +56,7 @@ public class ChairThrower : MonoBehaviour {
         SlideArrangement slide = chair.AddComponent<SlideArrangement>();
         slide.boxDimensions = new Vector3(sWidth, lHeight + sHeight + bHeight, sDepth);
         slide.boxOffset = Vector3.up * (lHeight + sHeight + bHeight) / 2;
-        slide.pushForward = sDepth;
-        slide.pushBackwards = sDepth;
+        slide.pushAmount = sDepth;
         return chair;
     }
 

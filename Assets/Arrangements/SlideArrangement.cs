@@ -7,14 +7,21 @@ public class SlideArrangement : Arrangement
 {
     public Vector3 boxDimensions;
     public Vector3 boxOffset;
-    public float pushForward = 1f;
-    public float pushBackwards = 1f;
+    public float pushAmount = 1f;
+    public bool horizontal = false;
 
     public override bool evaluate()
     {
-        Collider[] frontCols = Physics.OverlapBox(transform.position + transform.rotation * boxOffset + transform.forward * pushForward,
+        Vector3 pushDir = transform.forward * pushAmount;
+        Vector3 failPDir = transform.forward * (pushAmount + boxDimensions.z);
+        if(horizontal)
+        {
+            pushDir = transform.right * pushAmount;
+            failPDir = transform.right * (pushAmount + boxDimensions.x);
+        }
+        Collider[] frontCols = Physics.OverlapBox(transform.position + transform.rotation * boxOffset + pushDir,
             boxDimensions * .49f, transform.rotation);
-        Collider[] rearCols = Physics.OverlapBox(transform.position + transform.rotation * boxOffset - transform.forward * pushForward,
+        Collider[] rearCols = Physics.OverlapBox(transform.position + transform.rotation * boxOffset - pushDir,
             boxDimensions * .49f, transform.rotation);
         //remove collisions with ourself.
         Collider fCol = null;
@@ -39,8 +46,8 @@ public class SlideArrangement : Arrangement
         if (rCol != null && fCol != null)
         {
             List<Vector3> fails = new List<Vector3>();;
-            fails.Add(transform.position + transform.forward * (pushBackwards + boxDimensions.z) + Vector3.up * .1f);
-            fails.Add(transform.position - transform.forward * (pushForward + boxDimensions.z) + Vector3.up * .1f);
+            fails.Add(transform.position + failPDir + Vector3.up * .1f);
+            fails.Add(transform.position - failPDir + Vector3.up * .1f);
             furnitureParent.failurePos = fails;
             return false;
         }

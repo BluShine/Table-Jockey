@@ -2,43 +2,64 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//true if there is free space either in front or behind the object
+//checks spaces to the left, right, forward, and back for at least one object of the specified furniture type.
 public class FurnitureCastArrangement : Arrangement
 {
-    public List<Vector3> castPoints;
-    public List<Vector3> castDirs;
-    public Furniture.FurnitureType furnitureType;
+    public Vector3 boxDimensions;
+    public Vector3 boxOffset;
+    public float pushAmount = 1f;
 
-    public float sphereRadius = .15f;
+    public Furniture.FurnitureType furnitureType;
 
     public override bool evaluate()
     {
-        for(int i = 0; i < castPoints.Count; i++)
+        Furniture foundFurniutre = null;
+        for(int i = 0; i < 4; i++)
         {
-            Ray ray = new Ray(transform.position + transform.rotation * castPoints[i], 
-                transform.rotation * castDirs[i]);
-            RaycastHit rayHit = new RaycastHit();
-            Physics.SphereCast(ray, sphereRadius, out rayHit);
-            Furniture furniture = rayHit.transform.GetComponentInParent<Furniture>();
-            if(furniture != null)
+            //pick direction
+            Vector3 pushDir = Vector3.zero;
+            switch(i)
             {
-                if(furniture.furnitureType == furnitureType)
+                case 0:
+                    pushDir = transform.forward * pushAmount;
+                    break;
+                case 1:
+                    pushDir = -transform.forward * pushAmount;
+                    break;
+                case 2:
+                    pushDir = transform.right * pushAmount;
+                    break;
+                case 3:
+                    pushDir = -transform.right * pushAmount;
+                    break;
+            }
+            //check for collisions
+            Collider[] collisions = Physics.OverlapBox(transform.position + transform.rotation * boxOffset + pushDir,
+            boxDimensions * .49f, transform.rotation);
+            //see if any of the collisions are the right furniture type and not ourself.
+            foreach (Collider c in collisions)
+            {
+                Furniture f = c.GetComponentInParent<Furniture>();
+                if (f != null && f != furnitureParent && f.furnitureType == furnitureType)
                 {
-                    return true;
+                    foundFurniutre = f;
                 }
             }
         }
-        List<Vector3> failLines = new List<Vector3>();
-        failLines.Add(transform.position + transform.rotation * castPoints[0]);
-        for(int i = 0; i < castPoints.Count; i ++)
-        {
-            failLines.Add(transform.position + transform.rotation * castPoints[i] +
-                transform.rotation * castDirs[i] * 10);
-            failLines.Add(transform.position + transform.rotation * castPoints[i]);
+        //did we find a matching piece of furniture?
+        if (foundFurniutre != null) {
+            return true;
         }
-
-        furnitureParent.failurePos = failLines;
-
+        List<Vector3> fails = new List<Vector3>(); ;
+        fails.Add(transform.position);
+        fails.Add(transform.position + (pushAmount + boxDimensions.x) * transform.right + Vector3.up * .1f);
+        fails.Add(transform.position + Vector3.right * .01f);
+        fails.Add(transform.position - (pushAmount + boxDimensions.x) * transform.right + Vector3.up * .1f);
+        fails.Add(transform.position);
+        fails.Add(transform.position + (pushAmount + boxDimensions.z) * transform.forward + Vector3.up * .1f);
+        fails.Add(transform.position + Vector3.left * .01f);
+        fails.Add(transform.position - (pushAmount + boxDimensions.z) * transform.forward + Vector3.up * .1f);
+        furnitureParent.failurePos = fails;
         return false;
     }
 }
