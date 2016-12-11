@@ -26,22 +26,38 @@ public class ChairThrower : MonoBehaviour {
             }
 
             throwThing(thing, new Vector3(Random.Range(-4, 4), 1, Random.Range(-4, 4)),
-                new Vector3(.5f - Random.value, .25f - Random.value * .5f, .5f - Random.value), 5);
+                new Vector3(.5f - Random.value, .25f - Random.value * .5f, .5f - Random.value), .1f);
         }
 	}
 
     GameObject makeChair()
     {
         GameObject chair = Instantiate(chairPrefab);
-        chair.GetComponent<MeshFilter>().mesh = ChairGenerator.Chair(.1f, .44f, .51f, .56f, .05f, .39f, false, false,
+        float lWidth = .1f;
+        float lHeight = .44f;
+        float sWidth = .51f;
+        float sDepth = .56f;
+        float sHeight = .05f;
+        float bHeight = .39f;
+        //mesh
+        chair.GetComponent<MeshFilter>().mesh = ChairGenerator.Chair(
+            lWidth, lHeight, sWidth, sDepth, sHeight, bHeight, false, false,
             Color.HSVToRGB(Random.value, Random.Range(.5f, 1f), 1)).ToMesh();
-        GameObject collider = ChairGenerator.ChairCollider(.1f, .44f, .51f, .56f, .05f, .39f, false, false);
+        //collider
+        GameObject collider = ChairGenerator.ChairCollider(
+            lWidth, lHeight, sWidth, sDepth, sHeight, bHeight, false, false);
         collider.transform.parent = chair.transform;
+        //physics material
         foreach(Collider c in chair.GetComponentsInChildren<Collider>())
         {
             c.material = physMaterial;
         }
-        
+        //chair arrangement: chairs require space either in front or behind the chair.
+        SlideArrangement slide = chair.AddComponent<SlideArrangement>();
+        slide.boxDimensions = new Vector3(sWidth, lHeight + sHeight + bHeight, sDepth);
+        slide.boxOffset = Vector3.up * (lHeight + sHeight + bHeight) / 2;
+        slide.pushForward = sDepth;
+        slide.pushBackwards = sDepth;
         return chair;
     }
 
