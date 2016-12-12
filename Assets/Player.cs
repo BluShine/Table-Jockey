@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-    public float pushForce = 10f;
-    public float upRightForce = 100f;
+    public float pushForce = 100f;
+    public float upRightForce = 6000f;
 
     Rigidbody inhabitedObject;
 
@@ -82,7 +82,7 @@ public class Player : MonoBehaviour {
             Vector3 moveForce = Vector3.zero;
             moveForce += Input.GetAxis("Vertical") * inhabitedObject.transform.forward;
             moveForce += Input.GetAxis("Strafe") * inhabitedObject.transform.right;
-            inhabitedObject.AddForce(moveForce * pushForce, ForceMode.Acceleration);
+            inhabitedObject.AddForce(moveForce * pushForce * Time.deltaTime, ForceMode.Acceleration);
             if(moveForce.magnitude > 0 && Random.value < .1f && !moveSound.isPlaying)
             {
                 Pentatonic.PlaySound(moveSound, 4);
@@ -90,10 +90,10 @@ public class Player : MonoBehaviour {
             //rotate
             if (inhabitedObject.angularVelocity.magnitude < 1)
             {
-                inhabitedObject.AddTorque(new Vector3(0, Input.GetAxis("Horizontal"), 0) * pushForce * 5, ForceMode.Acceleration);
+                inhabitedObject.AddTorque(new Vector3(0, Input.GetAxis("Horizontal"), 0) * pushForce * 5 * Time.deltaTime, ForceMode.Acceleration);
             } else
             {
-                inhabitedObject.AddTorque(new Vector3(0, Input.GetAxis("Horizontal"), 0) * pushForce * 2, ForceMode.Acceleration);
+                inhabitedObject.AddTorque(new Vector3(0, Input.GetAxis("Horizontal"), 0) * pushForce * 2 * Time.deltaTime, ForceMode.Acceleration);
             }
             if (Input.GetAxis("Horizontal") != 0 && Random.value < .1f && !rotateSound.isPlaying)
             {
@@ -110,7 +110,7 @@ public class Player : MonoBehaviour {
             //Debug.Log("x " + xR + " z " + zR);
             if (Mathf.Abs(xR) > 10 || Mathf.Abs(zR) > 10)
             {
-                inhabitedObject.AddTorque(new Vector3(xR, 0, zR) * upRightForce);
+                inhabitedObject.AddTorque(new Vector3(xR, 0, zR) * upRightForce * Time.deltaTime);
             }
 
             if (Input.GetButtonDown("Fire1"))
