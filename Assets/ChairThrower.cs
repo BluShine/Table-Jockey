@@ -9,15 +9,17 @@ public class ChairThrower : MonoBehaviour {
 
     public PhysicMaterial physMaterial;
 
+    public int numChairs = 10;
+
 	// Use this for initialization
 	void Start () {
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < numChairs; i++)
         {
             GameObject thing;
-            if(Random.value < .5f)
+            if(Random.value < .7f)
             {
                 thing = makeChair();
-            } else if (Random.value < .5f)
+            } else if (Random.value < .7f)
             {
                 thing = makeTable();
             } else
@@ -25,7 +27,7 @@ public class ChairThrower : MonoBehaviour {
                 thing = makeBed();
             }
 
-            throwThing(thing, new Vector3(Random.Range(-4, 4), 1, Random.Range(-4, 4)),
+            throwThing(thing, new Vector3(Random.Range(-2, 2), 1, Random.Range(-2, 2)),
                 new Vector3(.5f - Random.value, .25f - Random.value * .5f, .5f - Random.value), .1f);
         }
 	}
@@ -52,11 +54,6 @@ public class ChairThrower : MonoBehaviour {
         {
             c.material = physMaterial;
         }
-        //chair arrangement: chairs require space either in front or behind the chair.
-        SlideArrangement slide = chair.AddComponent<SlideArrangement>();
-        slide.boxDimensions = new Vector3(sWidth, lHeight + sHeight + bHeight, sDepth);
-        slide.boxOffset = Vector3.up * (lHeight + sHeight + bHeight) / 2;
-        slide.pushAmount = sDepth;
         return chair;
     }
 

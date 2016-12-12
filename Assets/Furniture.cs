@@ -13,7 +13,7 @@ public class Furniture : MonoBehaviour {
 
     List<Arrangement> arrangements;
 
-    bool pass = true;
+    public bool pass = true;
 
     LineRenderer failureLine;
     public List<Vector3> failurePos;
@@ -28,7 +28,10 @@ public class Furniture : MonoBehaviour {
             a.furnitureParent = this;
         }
         failureLine.enabled = false;
-
+        if (FindObjectOfType<WinDetection>() != null)
+        {
+            FindObjectOfType<WinDetection>().furnitureList.Add(this);
+        }
     }
 	
 	// Update is called once per frame
