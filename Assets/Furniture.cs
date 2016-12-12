@@ -20,6 +20,8 @@ public class Furniture : MonoBehaviour {
 
     public AudioSource hitSound;
 
+    float startBuffer = 1;
+
     // Use this for initialization
     void Start () {
         failureLine = GetComponent<LineRenderer>();
@@ -42,7 +44,7 @@ public class Furniture : MonoBehaviour {
 
     public void OnCollisionEnter(Collision collision)
     {
-        if (hitSound == null)
+        if (hitSound == null || startBuffer > 0)
             return;
         if(collision.relativeVelocity.magnitude > .1f && hitSound.isPlaying == false)
         {
@@ -52,6 +54,7 @@ public class Furniture : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        startBuffer -= Time.deltaTime;
         if (Random.value < .05f) //don't need to check every frame, just do it frequently enough.
         {
             pass = true;
