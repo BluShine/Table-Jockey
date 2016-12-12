@@ -18,6 +18,8 @@ public class Furniture : MonoBehaviour {
     LineRenderer failureLine;
     public List<Vector3> failurePos;
 
+    public AudioSource hitSound;
+
     // Use this for initialization
     void Start () {
         failureLine = GetComponent<LineRenderer>();
@@ -36,6 +38,16 @@ public class Furniture : MonoBehaviour {
         {
             FindObjectOfType<EndlessMode>().furnitureList.Add(this);
         }
+    }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (hitSound == null)
+            return;
+        if(collision.relativeVelocity.magnitude > .1f && hitSound.isPlaying == false)
+        {
+            Pentatonic.PlaySound(hitSound, 7);
+        } 
     }
 	
 	// Update is called once per frame

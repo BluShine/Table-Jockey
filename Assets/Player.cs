@@ -18,6 +18,11 @@ public class Player : MonoBehaviour {
 
     WinDetection winDetect;
 
+    public AudioSource clickSound;
+    public AudioSource unclickSound;
+    public AudioSource moveSound;
+    public AudioSource rotateSound;
+
 	// Use this for initialization
 	void Start () {
         mLook = GetComponent<SmoothMouseLook>();
@@ -37,6 +42,7 @@ public class Player : MonoBehaviour {
             if (Input.GetButtonDown("Fire1"))
             {
                 clickFurniture();
+                clickSound.Play();
             }
             //camera movement
             Vector3 moveVector = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
@@ -77,6 +83,10 @@ public class Player : MonoBehaviour {
             moveForce += Input.GetAxis("Vertical") * inhabitedObject.transform.forward;
             moveForce += Input.GetAxis("Strafe") * inhabitedObject.transform.right;
             inhabitedObject.AddForce(moveForce * pushForce, ForceMode.Acceleration);
+            if(moveForce.magnitude > 0 && Random.value < .1f && !moveSound.isPlaying)
+            {
+                Pentatonic.PlaySound(moveSound, 4);
+            }
             //rotate
             if (inhabitedObject.angularVelocity.magnitude < 1)
             {
@@ -84,6 +94,10 @@ public class Player : MonoBehaviour {
             } else
             {
                 inhabitedObject.AddTorque(new Vector3(0, Input.GetAxis("Horizontal"), 0) * pushForce * 2, ForceMode.Acceleration);
+            }
+            if (Input.GetAxis("Horizontal") != 0 && Random.value < .1f && !rotateSound.isPlaying)
+            {
+                Pentatonic.PlaySound(rotateSound, 4);
             }
             //keep it from flipping
             Vector3 curRot = inhabitedObject.transform.rotation.eulerAngles;
@@ -102,6 +116,7 @@ public class Player : MonoBehaviour {
             if (Input.GetButtonDown("Fire1"))
             {
                 inhabitedObject = null;
+                unclickSound.Play();
                 if (winDetect != null)
                 {
                     winDetect.CheckWin();
