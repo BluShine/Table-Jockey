@@ -15,6 +15,11 @@ public class TableSpawner : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        spawnTable(transform.position, transform.rotation);
+    }
+
+    public GameObject spawnTable(Vector3 position, Quaternion rotation)
+    {
         GameObject table = Instantiate(prefab);
         table.GetComponent<MeshFilter>().mesh = TableGenerator.Table(
             legWidth, legHeight, tableWidth, tableDepth, tableHeight,
@@ -34,8 +39,10 @@ public class TableSpawner : MonoBehaviour {
         cast.pushAmount = .2f;
         cast.furnitureType = Furniture.FurnitureType.chair;
 
-        table.transform.position = transform.position;
-        table.transform.rotation = transform.rotation;
+        table.transform.position = position;
+        table.transform.rotation = rotation;
+
+        return table;
     }
 
     void OnDrawGizmos()

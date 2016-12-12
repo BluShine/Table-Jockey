@@ -32,6 +32,10 @@ public class Furniture : MonoBehaviour {
         {
             FindObjectOfType<WinDetection>().furnitureList.Add(this);
         }
+        if(FindObjectOfType<EndlessMode>() != null)
+        {
+            FindObjectOfType<EndlessMode>().furnitureList.Add(this);
+        }
     }
 	
 	// Update is called once per frame

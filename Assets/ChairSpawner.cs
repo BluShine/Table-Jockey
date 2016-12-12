@@ -17,6 +17,11 @@ public class ChairSpawner : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        spawnChair(transform.position, transform.rotation);
+    }
+
+    public GameObject spawnChair(Vector3 position, Quaternion rotation)
+    {
         GameObject chair = Instantiate(prefab);
         //mesh
         chair.GetComponent<MeshFilter>().mesh = ChairGenerator.Chair(
@@ -37,8 +42,9 @@ public class ChairSpawner : MonoBehaviour {
         slide.boxOffset = Vector3.up * (lHeight + sHeight + bHeight) / 2;
         slide.pushAmount = sDepth;
 
-        chair.transform.position = transform.position;
-        chair.transform.rotation = transform.rotation;
+        chair.transform.position = position;
+        chair.transform.rotation = rotation;
+        return chair;
     }
 
     void OnDrawGizmos()

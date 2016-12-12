@@ -21,6 +21,11 @@ public class BedSpawner : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        spawnBed(transform.position, transform.rotation);
+    }
+
+    public GameObject spawnBed(Vector3 position, Quaternion rotation)
+    {
         GameObject bed = Instantiate(prefab);
         bed.GetComponent<MeshFilter>().mesh = BedGenerator.Bed(
             legWidth, legHeight, width, length, platformHeight, mattressHeight,
@@ -42,8 +47,10 @@ public class BedSpawner : MonoBehaviour {
         slide.pushAmount = width / 2;
         slide.horizontal = true;
 
-        bed.transform.position = transform.position;
-        bed.transform.rotation = transform.rotation;
+        bed.transform.position = position;
+        bed.transform.rotation = rotation;
+
+        return bed;
     }
 
     void OnDrawGizmos()

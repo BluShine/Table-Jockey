@@ -26,6 +26,11 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (Input.GetButtonDown("Cancel"))
+        {
+            Application.Quit();
+        }
+
         if (inhabitedObject == null)
         {
             mLook.enabled = true;
@@ -60,8 +65,12 @@ public class Player : MonoBehaviour {
         {
             mLook.rotationY = -90;
             mLook.enabled = false;
+            //point the camera down
             transform.position = inhabitedObject.transform.position + Vector3.up * 3f;
-            transform.rotation = inhabitedObject.transform.rotation * Quaternion.Euler(90, 0, 0);
+            Quaternion lookDown = inhabitedObject.transform.rotation;
+            lookDown = Quaternion.Euler(0, lookDown.eulerAngles.y, 0);//remove roll and tilt.
+            lookDown = lookDown * Quaternion.Euler(90, 0, 0);//point downwards.
+            transform.rotation = lookDown;
 
             //move
             Vector3 moveForce = Vector3.zero;
@@ -84,7 +93,7 @@ public class Player : MonoBehaviour {
             float zR = curRot.z;
             if (zR > 180)
                 zR -= 360;
-            Debug.Log("x " + xR + " z " + zR);
+            //Debug.Log("x " + xR + " z " + zR);
             if (Mathf.Abs(xR) > 10 || Mathf.Abs(zR) > 10)
             {
                 inhabitedObject.AddTorque(new Vector3(xR, 0, zR) * upRightForce);
@@ -93,7 +102,10 @@ public class Player : MonoBehaviour {
             if (Input.GetButtonDown("Fire1"))
             {
                 inhabitedObject = null;
-                winDetect.CheckWin();
+                if (winDetect != null)
+                {
+                    winDetect.CheckWin();
+                }
             }
         }
     }
